@@ -7,6 +7,27 @@ version := "1.7-SNAPSHOT"
 scalaVersion := "2.11.7"
 
 scalacOptions  ++= Seq("-feature", "-language:postfixOps")
+
+// Note we use 'externalResolvers' and not 'resolvers' because resolvers are
+// merged into externalResolvers which already contains a list of default
+// repositories we do not want. Let's overwrite them with Nexus instead.
+// Ref: http://www.scala-sbt.org/release/docs/Library-Dependencies.html
+externalResolvers := Seq(
+  "local"               at "file://"+Path.userHome.absolutePath+"/.ivy2/local",
+  "snapshots"           at "https://nexus.awsotherlevels.com/repository/maven-ol-snapshots/",
+  "releases"            at "https://nexus.awsotherlevels.com/repository/maven-ol-releases/",
+  "maven-public"        at "https://nexus.awsotherlevels.com/repository/maven-public/",
+  "ivy-releases"        at "https://nexus.awsotherlevels.com/repository/ivy-releases/"
+)
+// Nexus
+publishTo := {
+  val nexus = "https://nexus.awsotherlevels.com/repository/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "maven-ol-snapshots/")
+  else
+    Some("releases"  at nexus + "maven-ol-releases/")
+}
+credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
  
 resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 
