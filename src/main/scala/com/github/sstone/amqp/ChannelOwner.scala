@@ -46,11 +46,6 @@ object ChannelOwner {
           }
         }))
       }
-      case request@AddFlowListener(listener) => {
-        sender ! withChannel(channel, request)(c => c.addFlowListener(new FlowListener {
-          def handleFlow(active: Boolean): Unit = listener ! HandleFlow(active)
-        }))
-      }
       case request@Publish(exchange, routingKey, body, properties, mandatory, immediate) => {
         log.debug("publishing %s".format(request))
         val props = properties getOrElse new AMQP.BasicProperties.Builder().build()
@@ -109,7 +104,7 @@ object ChannelOwner {
         log.debug(s"creating new consumer for listener $listener")
         sender ! withChannel(channel, request)(c => new DefaultConsumer(channel) {
           override def handleDelivery(consumerTag: String, envelope: Envelope, properties: BasicProperties, body: Array[Byte]) {
-            listener ! Delivery(consumerTag, envelope, properties, body)
+            listener ! com.github.sstone.amqp.Amqp.Delivery(consumerTag, envelope, properties, body)
           }
         })
       }

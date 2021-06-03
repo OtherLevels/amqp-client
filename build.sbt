@@ -2,7 +2,7 @@ name := "amqp-client"
 
 organization := "com.github.sstone"
  
-version := "1.5-SNAPSHOT"
+version := "1.7-SNAPSHOT"
  
 scalaVersion := "2.11.7"
 
@@ -13,7 +13,7 @@ resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/release
 libraryDependencies <<= scalaVersion { scala_version => 
     val akkaVersion   = "2.3.11"
     Seq(
-        "com.rabbitmq"         % "amqp-client"          % "3.5.2",
+        "com.rabbitmq"         % "amqp-client"          % "5.12.0",
         "com.typesafe.akka"    %% "akka-actor"          % akkaVersion % "provided",
         "com.typesafe.akka"    %% "akka-slf4j"          % akkaVersion % "test",
         "com.typesafe.akka"    %% "akka-testkit"        % akkaVersion  % "test",
